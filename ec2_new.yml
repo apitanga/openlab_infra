@@ -1,0 +1,39 @@
+---
+- name: ec2 create new
+  hosts: localhost
+  environment:
+    AWS_ACCESS_KEY: "{{ aws_access_key }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key }}"
+  gather_facts: false
+  connection: local
+
+  vars_files:
+    - ./vars/vault.yml
+    - ./vars/vars.yml
+  
+  vars:
+    tags:
+      env:  "{{ tags_env  | default('prod') }}"
+      type: "{{ tags_type | default('web') }}"
+
+  tasks:
+    - name: launch instance
+      local_action:
+        module: ec2
+        count: 1
+        keypair: ansible
+        instance_type: t2.medium
+        vpc_subnet_id: subnet-4af90677
+        image: ami-43a15f3e
+        region: us-east-1
+        group: web
+        wait: yes
+        instance_tags: "{{ tags | default('undefined') }}"
+        user_data: "{{ lookup('template', 'user-data-awx.j2') }}"
+        assign_public_ip: "{{ assign_eip | default(true) }}"
+      register: ec2
+
+    - name: Instance info
+      debug:
+        msg: "{{ item.id }} {{ item.public_ip }}"
+      with_items: "{{ ec2.instances }}"
