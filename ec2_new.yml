@@ -12,7 +12,7 @@
     - ./vars/vars.yml
   
   vars:
-    tags:
+    ec2_tags:
       env:  "{{ tags_env  | default('prod') }}"
       type: "{{ tags_type | default('web') }}"
 
@@ -28,7 +28,7 @@
         region: "{{ ec2_region }}"
         group: web
         wait: yes
-        instance_tags: "{{ tags | default('undefined') }}"
+        instance_tags: "{{ ec2_tags | default('undefined') }}"
         user_data: "{{ lookup('template', 'user-data-awx.j2') }}"
         assign_public_ip: "{{ assign_eip | default(true) }}"
       register: ec2
