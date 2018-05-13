@@ -41,6 +41,7 @@ packages:
 runcmd:
   - update-alternatives --set php /usr/bin/php7.2
   - a2enmod php7.2
+  - sed -i 's/^-m 64/-m 512/g' /etc/memcached.conf
   - systemctl restart apache2
   - systemctl restart memcached
   - systemctl restart mysql
