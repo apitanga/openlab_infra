@@ -22,10 +22,10 @@
         module: ec2
         count: 1
         keypair: ansible
-        instance_type: {{ ec2_size }}
-        vpc_subnet_id: {{ ec2_subnet }}
-        image: {{ ami }}
-        region: {{ ec2_region }}
+        instance_type: "{{ ec2_size }}"
+        vpc_subnet_id: "{{ ec2_subnet }}"
+        image: "{{ ami }}"
+        region: "{{ ec2_region }}"
         group: web
         wait: yes
         instance_tags: "{{ tags | default('undefined') }}"
