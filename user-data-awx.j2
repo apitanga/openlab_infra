@@ -41,7 +41,7 @@ packages:
   - php-memcached
 write_files:
   - path: /var/www/html/env.php
-    content: |
+    content: >
       define( 'DB_NAME', '{{ db_name }}' );
       define( 'DB_USER', '{{ db_user }}' );
       define( 'DB_PASSWORD', '{{ db_password }}' );
