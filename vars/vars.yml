@@ -1,4 +1,4 @@
-ami: ami-43a15f3e
+ami: ami-43a15f3e # Ubuntu 16.4 LTS
 aws_access_key: "{{ vault_aws_access_key }}"
 aws_secret_key: "{{ vault_aws_secret_key }}"
 ec2_subnet: subnet-4af90677
