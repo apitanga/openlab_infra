@@ -23,7 +23,7 @@ packages:
   - apache2
   - php7.2
 runcmd:
-#  - update-alternatives --set php /usr/bin/php7.2
+  - update-alternatives --set php /usr/bin/php7.2
 #  - a2enmod php7.2
   - systemctl restart apache2
   - php -v > /home/ansible/php_version
