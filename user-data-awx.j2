@@ -40,8 +40,8 @@ packages:
   - mysql-client
   - php-memcached
 write_files:
-  - path: /var/www/html/env.php
-    content: >
+  - path: /root/env.php
+    content: |
       define( 'DB_NAME', '{{ db_name }}' );
       define( 'DB_USER', '{{ db_user }}' );
       define( 'DB_PASSWORD', '{{ db_password }}' );
@@ -50,14 +50,10 @@ write_files:
       define( 'BBDB_USER', DB_USER );
       define( 'BBDB_PASSWORD', DB_PASSWORD );
       define( 'BBDB_HOST', DB_HOST );
-      $is_debug = isset( $_GET['bbg_is_debug'] );
       define( 'WP_DEBUG', $is_debug );
       define( 'WP_DEBUG_DISPLAY', false );
       define( 'WP_DEBUG_LOG', true );
       define( 'SCRIPT_DEBUG', true );
-      if ( ! empty( $_GET['debug_queries'] ) ) {
-	        define( 'SAVEQUERIES', true );
-      }
       define( 'DO_SHARDB', {{ do_shardb }} );
       $shardb_prefix = '{{ shardb_prefix }}';
       $shardb_dataset = '{{ shardb_dataset }}';
@@ -66,37 +62,23 @@ write_files:
       define( 'WPCOM_API_KEY', '{{ wpcom_api_key }}' );
       define( 'GF_LICENSE_KEY', '{{ gf_license_key }}' );
       define( 'GRAVITYPERKS_LICENSE_KEY', '{{ gravityperks_license_key }}' );
-      @ini_set( 'log_errors', WP_DEBUG && WP_DEBUG_LOG ? 'On' : 'Off' );
-      @ini_set('display_errors', WP_DEBUG && WP_DEBUG_DISPLAY ? 'On' : 'Off' );
-      @ini_set('error_log','/var/log/apache2/php_error.log');
-      function bbg_querytest() {
-	      global $wpdb;
-	      return;
-	      if ( ! empty( $_GET['cc'] ) ) {
-	      }
-	      if ( is_super_admin() && ! empty( $_GET['flush'] ) ) {
-		      wp_cache_flush();
-		      apc_clear_cache( 'user' );
-	      }
-	      return;
-	      if ( ! empty( $_GET['debug_queries'] ) ) {
-		      echo '<pre>';
-		      print_r( $wpdb->queries );
-		      echo '</pre>';
-	      }
-      }
-      register_shutdown_function( 'bbg_querytest' );
-      function _b( $e ) {
-      	$e = print_r( $e, true );
-      	error_log( '[' . date( 'Y-m-d H:i:s' ) . '] ' . $e . "\n", 3, ABSPATH . '/wp-content/bbg-debug.log' );
-      }
+  - path: /etc/apache2/sites-available/openlab.citytech.cuny.edu.conf
+    content: |
+      <VirtualHost *:80>
+          ServerAdmin andre@pitanga.org
+          ServerName openlab.citytech.cuny.edu
+          DocumentRoot /var/www/openlab/public_html
+          ErrorLog ${APACHE_LOG_DIR}/error.log
+          CustomLog ${APACHE_LOG_DIR}/access.log combined
+      </VirtualHost>
 runcmd:
   - update-alternatives --set php /usr/bin/php7.2
   - a2enmod php7.2
-  - sed -i 's/^-m 64/-m 512/g' /etc/memcached.conf
+  - a2ensite openlab.citytech.cuny.edu.conf
+  - a2dissite 000-default.conf
   - systemctl restart apache2
+  - mkdir -p /var/www/openlab/public_html
+  - git clone http://github.com/livinglab/openlab.git /var/www/openlab/public_html/
+  - mv /root/env.php /var/www/openlab/public_html/
+  - sed -i 's/^-m 64/-m 512/g' /etc/memcached.conf
   - systemctl restart memcached
-  - systemctl restart mysql
-  - rm -f /var/www/html/index.html
-  - git clone http://github.com/livinglab/openlab.git /var/www/html/
-  - echo '<?php phpinfo();' > /var/www/html/php_info.php
