@@ -80,5 +80,6 @@ runcmd:
   - mkdir -p /var/www/{{ hostname }}/public_html
   - git clone http://github.com/livinglab/openlab.git /var/www/{{ hostname }}/public_html/
   - mv /root/env.php /var/www/{{ hostname }}/public_html/
+  - echo '<?php phpinfo();' > /var/www/{{ hostname }}/phpinfo.php
   - sed -i 's/^-m 64/-m 512/g' /etc/memcached.conf
   - systemctl restart memcached
