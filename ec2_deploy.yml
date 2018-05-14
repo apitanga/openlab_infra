@@ -26,7 +26,7 @@
         vpc_subnet_id: "{{ ec2_subnet }}"
         image: "{{ ami }}"
         region: "{{ ec2_region }}"
-        group: web
+        group: "{{ ec2_secgroup }}"
         wait: yes
         instance_tags: "{{ ec2_tags | default('undefined') }}"
         user_data: "{{ lookup('template', 'cloud-config.j2') }}"
