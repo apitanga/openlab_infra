@@ -1,3 +1,5 @@
 # openlab_infra
 Example:
-`ansible-playbook Openlab/ec2_new.yml --ask-vault-pass`
+`ansible-playbook ec2_deploy.yml --ask-vault-pass`
+
+See `vars/vars.yml`.

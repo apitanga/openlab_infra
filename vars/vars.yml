@@ -5,6 +5,7 @@ ec2_eip: 52.20.88.179
 ec2_subnet: subnet-4af90677
 ec2_region: us-east-1
 ec2_size: t2.medium # 2 vCPU and 4GB RAM
+ec2_secgroup: "{{ vault_ec2_secgroup }}"
 fqdn: openlab.citytech.cuny.edu
 hostname: openlab
 sysadmin_email: android.pitanga@gmail.com
