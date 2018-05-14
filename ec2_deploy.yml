@@ -1,5 +1,5 @@
 ---
-- name: ec2 create new
+- name: Launch new instances and associate Elastic IP
   hosts: localhost
   environment:
     AWS_ACCESS_KEY: "{{ aws_access_key }}"
@@ -17,7 +17,7 @@
       type: "{{ tags_type | default('web') }}"
 
   tasks:
-    - name: launch instance
+    - name: Launch instance
       local_action:
         module: ec2
         count: 1
@@ -32,6 +32,14 @@
         user_data: "{{ lookup('template', 'cloud-config.j2') }}"
         assign_public_ip: "{{ assign_eip | default(true) }}"
       register: ec2
+
+    - name: Associate with Elastic IP
+      local_action:
+        module: ec2_eip
+        device_id: "{{ item }}"
+        ip: "{{ ec2_eip }}"
+        region: "{{ ec2_region }}"
+      with_items: "{{ ec2.instance_ids }}"
 
     - name: Instance info
       debug:
