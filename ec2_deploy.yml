@@ -29,7 +29,7 @@
         group: web
         wait: yes
         instance_tags: "{{ ec2_tags | default('undefined') }}"
-        user_data: "{{ lookup('template', 'user-data-awx.j2') }}"
+        user_data: "{{ lookup('template', 'cloud-config.j2') }}"
         assign_public_ip: "{{ assign_eip | default(true) }}"
       register: ec2
 
