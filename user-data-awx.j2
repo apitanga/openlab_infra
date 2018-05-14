@@ -62,23 +62,23 @@ write_files:
       define( 'WPCOM_API_KEY', '{{ wpcom_api_key }}' );
       define( 'GF_LICENSE_KEY', '{{ gf_license_key }}' );
       define( 'GRAVITYPERKS_LICENSE_KEY', '{{ gravityperks_license_key }}' );
-  - path: /etc/apache2/sites-available/openlab.citytech.cuny.edu.conf
+  - path: /etc/apache2/sites-available/{{ fqdn }}.conf
     content: |
       <VirtualHost *:80>
-          ServerAdmin andre@pitanga.org
-          ServerName openlab.citytech.cuny.edu
-          DocumentRoot /var/www/openlab/public_html
+          ServerAdmin {{ sysadmin_email }}
+          ServerName {{ fqdn }}
+          DocumentRoot /var/www/{{ hostname }}/public_html
           ErrorLog ${APACHE_LOG_DIR}/error.log
           CustomLog ${APACHE_LOG_DIR}/access.log combined
       </VirtualHost>
 runcmd:
   - update-alternatives --set php /usr/bin/php7.2
   - a2enmod php7.2
-  - a2ensite openlab.citytech.cuny.edu.conf
+  - a2ensite {{ fqdn }}.conf
   - a2dissite 000-default.conf
   - systemctl restart apache2
-  - mkdir -p /var/www/openlab/public_html
-  - git clone http://github.com/livinglab/openlab.git /var/www/openlab/public_html/
-  - mv /root/env.php /var/www/openlab/public_html/
+  - mkdir -p /var/www/{{ hostname }}/public_html
+  - git clone http://github.com/livinglab/openlab.git /var/www/{{ hostname }}/public_html/
+  - mv /root/env.php /var/www/{{ hostname }}/public_html/
   - sed -i 's/^-m 64/-m 512/g' /etc/memcached.conf
   - systemctl restart memcached
