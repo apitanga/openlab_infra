@@ -28,6 +28,11 @@
         region: "{{ ec2_region }}"
         group: "{{ ec2_secgroup }}"
         wait: yes
+        volumes:
+          - device_name: /dev/xvdb
+            volume_type: gp2 # st1
+            volume_size: 25
+            delete_on_termination: true
         instance_tags: "{{ ec2_tags | default('undefined') }}"
         user_data: "{{ lookup('template', 'cloud-config.j2') }}"
         assign_public_ip: "{{ assign_eip | default(true) }}"
