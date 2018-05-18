@@ -70,6 +70,7 @@ write_files:
       define( 'WPCOM_API_KEY', '{{ wpcom_api_key }}' );
       define( 'GF_LICENSE_KEY', '{{ gf_license_key }}' );
       define( 'GRAVITYPERKS_LICENSE_KEY', '{{ gravityperks_license_key }}' );
+      define( 'OPENLAB_CACHE_ENGINE', 'memcached' );
   - path: /etc/apache2/sites-available/{{ fqdn }}.conf
     content: |
       <VirtualHost *:80>
