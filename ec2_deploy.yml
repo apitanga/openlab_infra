@@ -30,8 +30,8 @@
         wait: yes
         volumes:
           - device_name: /dev/xvdb
-            volume_type: gp2 # st1
-            volume_size: 25
+            volume_type: st1
+            volume_size: 500
             delete_on_termination: true
         instance_tags: "{{ ec2_tags | default('undefined') }}"
         user_data: "{{ lookup('template', 'cloud-config.j2') }}"
