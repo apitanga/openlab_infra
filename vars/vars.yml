@@ -1,6 +1,10 @@
 ami: ami-43a15f3e # Ubuntu 16.4 LTS
 aws_access_key: "{{ vault_aws_access_key }}"
 aws_secret_key: "{{ vault_aws_secret_key }}"
+ebs_device_name: /dev/xvdb
+ebs_volume_type: st1 # Throughput Optimized HDD
+ebs_volume_size: 500 # 500GB
+ebs_delete_on_term: true
 ec2_eip: 52.20.88.179
 ec2_subnet: subnet-4af90677
 ec2_region: us-east-1
