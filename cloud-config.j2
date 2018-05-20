@@ -9,8 +9,8 @@ users:
     shell: /bin/bash
     sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
     ssh_pwauth: False
-    ssh_authorized_keys:
-      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDA+VIgogJ1b3MbgQQPT4SuMF+DjLjTybTPcuTnImLFlkrEq+HS6ZVNVkw1rqUnEiZVJCzLNk2h9mXSIo0E0R/2CmlOaF1tYu3Rlx26dMDaBsHtfe0ZG+7JkX8V9I0v0+g0JKC9AlkJemrezneaYY0HzaLkuCGoLE320xT4Tbn8MXfV8EgyPGkfnA54JrhblBFbgVxDN7S6/2hmL9XF/Wjt/XsdQSXjTkYV6QyfavyBfKcU8B/KpDOpC6lgCh5Z5g3aCtyVLxS2wKH2HWOMN4QMHWe/2L9ZxRf3pDve3Bg9mr6GnbndICpptMhp/Wo7OuDkFMiY5EV0DsiWTqu/+H/h
+    ssh_import_id:
+      - gh:apitanga
 mounts:
 - [ xvdb, /data, "auto","defaults,nofail", "0", "0 "]
 fs_setup:
@@ -96,7 +96,7 @@ runcmd:
   - a2dissite 000-default.conf
   - systemctl restart apache2
   - mkdir -p /data/www/{{ hostname }}/public_html
-  - git clone http://github.com/livinglab/openlab.git /data/www/{{ hostname }}/public_html/
+  - git clone -b php-upgrade --single-branch http://github.com/livinglab/openlab.git /data/www/{{ hostname }}/public_html/
   - mv /root/env.php /data/www/{{ hostname }}/public_html/
   - echo '<?php phpinfo();' > /data/www/{{ hostname }}/public_html/phpinfo.php
   - sed -i 's/^-m 64/-m 512/g' /etc/memcached.conf
