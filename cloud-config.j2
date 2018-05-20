@@ -11,6 +11,13 @@ users:
     ssh_pwauth: False
     ssh_import_id:
       - gh:apitanga
+  - name: boone
+    gecos: boone
+    shell: /bin/bash
+    sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
+    ssh_pwauth: False
+    ssh_import_id:
+      - gh:boonebgorges
 mounts:
 - [ xvdb, /data, "auto","defaults,nofail", "0", "0 "]
 fs_setup:
