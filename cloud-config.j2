@@ -96,6 +96,34 @@ write_files:
                 Require all granted
         </Directory>
       </VirtualHost>
+  - path: /etc/apache2/sites-available/default-ssl.conf
+    content: |
+      <IfModule mod_ssl.c>
+        <VirtualHost _default_:443>
+                ServerAdmin {{ sysadmin_email }}
+                DocumentRoot /data/www/{{ hostname }}/public_html
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+                SSLEngine on
+                SSLCertificateFile      /etc/ssl/certs/ssl-cert-openlab.pem
+                SSLCertificateKeyFile /etc/ssl/private/ssl-cert-openlab.key
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                                SSLOptions +StdEnvVars
+                </Directory>
+                <Directory />
+                    Options FollowSymLinks
+                    AllowOverride None
+                </Directory>
+                <Directory /data/www/{{ hostname }}/public_html>
+                    Options Indexes FollowSymLinks MultiViews
+                    AllowOverride None
+                    Require all granted
+                </Directory>
+        </VirtualHost>
+      </IfModule>
 runcmd:
   - update-alternatives --set php /usr/bin/php7.2
   - a2enmod php7.2
@@ -106,6 +134,11 @@ runcmd:
   - git clone -b php-upgrade --single-branch http://github.com/livinglab/openlab.git /data/www/{{ hostname }}/public_html/
   - mv /root/env.php /data/www/{{ hostname }}/public_html/
   - echo '<?php phpinfo();' > /data/www/{{ hostname }}/public_html/phpinfo.php
+  - openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C=US/ST=NY/L=Brooklyn/O=OpenLab/CN=openlab.city.tech.cuny.edu" -keyout /etc/ssl/private/ssl-cert-openlab.key -out /etc/ssl/certs/ssl-cert-openlab.pem
+  - a2enmod ssl
+  - a2enmod headers
+  - a2ensite default-ssl
+  - systemctl restart apache2
   - sed -i 's/^-m 64/-m 512/g' /etc/memcached.conf
   - systemctl restart memcached
   - curl http://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /usr/local/bin/wp
