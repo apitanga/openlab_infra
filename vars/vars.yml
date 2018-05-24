@@ -6,7 +6,7 @@ ebs_volume_type: st1 # Throughput Optimized HDD
 ebs_volume_size: 500 # 500GB
 ebs_delete_on_term: true
 ec2_eip: 52.202.155.101
-ec2_subnet: subnet-4af90677
+ec2_subnet: subnet-9525b0f1
 ec2_region: us-east-1
 ec2_size: t2.medium # 2 vCPU and 4GB RAM
 ec2_secgroup: "{{ vault_ec2_secgroup }}"
