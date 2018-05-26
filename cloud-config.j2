@@ -137,6 +137,8 @@ runcmd:
   - openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C=US/ST=NY/L=Brooklyn/O=OpenLab/CN=openlab.city.tech.cuny.edu" -keyout /etc/ssl/private/ssl-cert-openlab.key -out /etc/ssl/certs/ssl-cert-openlab.pem
   - a2enmod ssl
   - a2enmod headers
+  - a2enmod rewrite
+  - a2enmod authz_groupfile
   - a2ensite default-ssl
   - systemctl restart apache2
   - sed -i 's/^-m 64/-m 512/g' /etc/memcached.conf
