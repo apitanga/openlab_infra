@@ -150,4 +150,5 @@ runcmd:
   - ln -s /data/mysql /var/lib/mysql
   - echo 'alias /var/lib/mysql/ -> /data/mysql/,' >> /etc/apparmor.d/tunables/alias
   - systemctl restart apparmor
+  - echo "sql-mode=\"\"" >> /etc/mysql/mysql.conf.d/mysqld.cnf
   - systemctl restart mysql
