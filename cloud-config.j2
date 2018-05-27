@@ -53,6 +53,8 @@ packages:
   - mysql-server
   - mysql-client
   - php-memcached
+  - postfix
+  - mailutils
 write_files:
   - path: /root/env.php
     content: |
@@ -152,3 +154,6 @@ runcmd:
   - systemctl restart apparmor
   - echo "sql-mode=\"\"" >> /etc/mysql/mysql.conf.d/mysqld.cnf
   - systemctl restart mysql
+  - postconf -e 'inet_protocols=ipv4'
+  - postconf -e 'inet_interfaces=loopback-only'
+  - systemctl restart postfix
