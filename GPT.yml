@@ -1,0 +1,42 @@
+hosts: localhost
+connection: local
+tasks:
+name: Launch EC2 instance
+ec2:
+key_name: "{{ keypair_name }}"
+instance_type: "{{ instance_type }}"
+image: "{{ ami_id }}"
+region: "{{ region }}"
+zone: "{{ availability_zone }}"
+wait: true
+register: ec2
+
+name: Create EBS volume from snapshot
+ec2_vol:
+aws_access_key: "{{ aws_access_key }}"
+aws_secret_key: "{{ aws_secret_key }}"
+region: "{{ region }}"
+volume_type: "{{ volume_type }}"
+snapshot: "{{ ebs_snapshot_id }}"
+register: ebs
+
+name: Attach EBS volume to EC2 instance
+ec2_vol:
+instance: "{{ ec2.instance_id }}"
+volume: "{{ ebs.volume_id }}"
+state: attached
+device_name: "{{ device_name }}"
+register: ebs_attached
+
+name: Wait for EBS volume to be attached
+ec2_wait_for_status:
+instance_ids: "{{ ec2.instance_id }}"
+state: running
+wait_timeout: 120
+until: ebs_attached.attached
+
+name: Execute shell command to mount EBS volume
+shell: mount -t ext4 /dev/{{ device_name }} /backup
+args:
+chdir: /
+when: ebs_attached.attached == true
